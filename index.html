@@ -1,0 +1,260 @@
+<style>
+/* Global rules */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Body rules */
+body {
+    background-image: linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%);
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+    font-family: 'Vibur', cursive;
+    font-family: 'Abel', sans-serif;
+    opacity: .85;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    margin: 0;
+}
+
+/* Form attributes */
+form {
+    width: 100%;
+    max-width: 350px; /* Increased max-width for better visibility on mobile */
+    border-radius: 10px;
+    box-shadow: 0 9px 50px hsla(20, 67%, 75%, 0.31);
+    padding: 3%;
+    background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+}
+
+/* Form container */
+form .con {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Header form */
+header {
+    margin: 2% 0 10% 0;
+    text-align: center;
+}
+
+/* Login title form */
+header h2 {
+    font-size: 2.5em; /* Increased font size */
+    font-family: 'Playfair Display', serif;
+    color: #3e403f;
+}
+
+/* Input items */
+.input-item {
+    background: #fff;
+    color: #333;
+    padding: 14.5px 0px 15px 9px;
+    border-radius: 5px 0px 0px 5px;
+}
+
+/* Inputs form */
+input[class="form-input"] {
+    width: 100%;
+    max-width: 280px; /* Increased max-width for inputs */
+    height: 55px; /* Increased height for better touch usability */
+    margin-top: 2%;
+    padding: 15px;
+    font-size: 18px; /* Increased font size */
+    font-family: 'Abel', sans-serif;
+    color: #5E6472;
+    outline: none;
+    border: none;
+    border-radius: 0px 5px 5px 0px;
+    transition: 0.2s linear;
+}
+
+/* Focus effect on input */
+input:focus {
+    transform: translateX(-2px);
+    border-radius: 5px;
+}
+
+/* Buttons */
+button {
+    display: inline-block;
+    color: #252537;
+    width: 100%;
+    max-width: 300px; /* Increased max-width for button */
+    height: 55px; /* Increased height */
+    padding: 0 20px;
+    background: #fff;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s linear;
+    margin: 7% 0;
+    letter-spacing: 0.05em;
+}
+
+/* Submit button styling */
+.submits {
+    width: 100%;
+    margin: 0;
+}
+
+/* Show/Hide Password button */
+.frgt-pass {
+    background: transparent;
+}
+
+/* Sign Up button */
+.sign-up {
+    background: #49ffdb;
+}
+
+/* Button hover effect */
+button:hover {
+    transform: translateY(3px);
+    box-shadow: none;
+    animation: ani9 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes ani9 {
+    0% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: translateY(5px);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    header h2 {
+        font-size: 2em; /* Slightly decreased font size for smaller screens */
+    }
+
+    .input-item {
+        padding: 10px;
+    }
+
+    input[class="form-input"] {
+        max-width: 100%; /* Make inputs full-width on smaller screens */
+    }
+
+    button {
+        max-width: 100%; /* Make buttons full-width on smaller screens */
+    }
+}
+
+
+</style>
+
+<div class="overlay">
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+        <div class="con">
+            <!-- Start header Content -->
+            <header class="head-form">
+                <h4>Create a New User </h4>
+                <h2>Admin Log In</h2>
+            </header>
+            <!-- End header Content -->
+            <br>
+            <div class="field-set">
+                <!-- Username -->
+                <span class="input-item">
+                    <i class="fa fa-user-circle"></i>
+                </span>
+                <input class="form-input" id="username" type="text" placeholder="@UserName" required>
+
+                <br>
+
+                <!-- Password -->
+                <span class="input-item">
+                    <i class="fa fa-key"></i>
+                </span>
+                <input class="form-input" type="password" placeholder="Password" id="password" name="password" required>
+
+                <!-- Show/hide password -->
+                <span>
+                    <i class="fa fa-eye" aria-hidden="true" type="button" id="eye"></i>
+                </span>
+
+                <br>
+
+                <!-- Log In button -->
+                <button class="btn submits sign-up">LOGIN
+                    <i class="fa fa-user-plus" aria-hidden="true"></i>
+                </button>
+                
+            </div>
+
+            <!-- Other buttons -->
+        
+        </div>
+        <!-- Error message -->
+        <p id="message" style="color:red; text-align:center;"></p>
+        <br>
+        <br>
+        <br>
+        <h2><center>Login Then Create a New User </center></h2>
+    </form>
+<script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    async function store() {
+        try {
+            const response = await fetch(`https://register-node-js.onrender.com/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            // Handle the response from the server
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Assuming the result contains a role or some indication of the user type
+                const { role } = result;
+
+                // Store username in localStorage
+                localStorage.setItem('username', username);
+
+                // Redirect based on role
+                if (role === 'Admin' || role === 'admin') {
+                    window.location.href = 'https://sankar2.onrender.com';
+                } else if (role === 'staff' || role === 'Staff') {
+                    window.location.href = 'https://sankar-3n41.onrender.com/';
+                } else if (role === 'student'|| role === 'Student') {
+                    window.location.href = 'https://college-dkzx.onrender.com/';
+                } else {
+                    document.getElementById('message').textContent = 'Invalid role.';
+                }
+            } else {
+                document.getElementById('message').textContent = 'Invalid username or password.';
+            }
+        } catch (error) {
+            console.log(error);
+            document.getElementById('message').textContent = 'An error occurred. Please try again later.';
+        }
+    }
+
+    store();
+});
+
+    </script>
+</body>
+</html>
+
+</div>
